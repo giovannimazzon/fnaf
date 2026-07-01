@@ -64,7 +64,7 @@ Para rodar o jogo, é necessario alterar o charmap do simulador, pelo charmap da
 
 ## Lógica geral do Simulador:
 
-O código funciona basicamente como um emulador do hardware do processador do ICMC em software. Além disso, a lógica é integralmente controlada por uma máquina de estados em um laço infinito (loop:), onde cada iteração replica um ciclo de clock.
+O código funciona basicamente como um emulador do hardware do processador do ICMC em software. A lógica é integralmente controlada por uma máquina de estados em um laço infinito (loop:), onde cada iteração replica um ciclo de clock.
 
 ## As Etapas do Ciclo de Instrução:
 :
@@ -72,15 +72,15 @@ O processador executa os programas sequencialmente alternando entre estados lóg
 
 ### 1. Inicialização (STATE_RESET): 
 
-Limpa os registradores gerais (reg[0] a reg[7]) e o registrador de flags (FR). Ademais, PC reinicia (ou seja, volta para 0) e o ponteiro da pilha (SP) é jogado para o topo da memória (32767).
+Limpa os registradores gerais (reg[0] a reg[7]) e o registrador de flags (FR). O PC reinicia (ou seja, volta para 0) e o ponteiro da pilha (SP) é inicializado no topo da memória (32767).
 
 ### 2. Busca (STATE_FETCH):
 
-Busca a instrução de 16 bits na memória (MEMORY) usando a posição atual do PC, depois joga ela no IR e já atualiza o PC (faz o PC++).
+Busca a instrução de 16 bits na memória (MEMORY) usando a posição atual do PC, depois a armazena no IR e atualiza o PC (faz o PC++).
 
 ### 3. Decodificação (STATE_DECODE):
 
-Inicialmente, ela isola os 6 bits superiores do IR usando a função "pega_pedaco" para achar o Opcode. Depois disso, o switch(opcode) destrincha quais registradores vão ser lidos ou escritos (rx, ry, rz). Caso seja uma instrução simples (tipo MOV ou lógica), ela já morre aqui e o estado volta pro FETCH.
+Essa função isola os 6 bits superiores do IR usando a função "pega_pedaco" para achar o Opcode. Depois disso, o switch(opcode) identifica quais registradores serão lidos ou escritos (rx, ry, rz). Caso seja uma instrução simples (tipo MOV ou lógica), ela já é executada nesta etapa e o estado volta pro FETCH.
 
 ### 4. Execução Avançada (STATE_EXECUTE e STATE_EXECUTE2):
 
@@ -100,7 +100,7 @@ Controlam os barramentos (M1 a M6) e, a depender da instrução do switch, os se
 
 Logo no início de cada ciclo do clock (loop:), o código executa uma rotina contínua de monitoramento do hardware virtual para capturar possíveis erros de software do programa rodando em Assembly:
 
-### Sensores de bug:
+### Sensores de Falha:
 
 Checa se a ULA ativou a flag de divisão por zero.
 
@@ -112,7 +112,7 @@ Confere se o endereço final de barramento M1 tenta ler ou escrever além do esp
 
 Se qualquer um dos sensores for ativado, o simulador interrompe a execução do programa e chama a função "pane", que congela o sistema.
 
-Após isso, a função "dedo_duro" é utilizada para traduzir o Opcode numérico no comando que causou o problema (como "DIV" ou "PUSH") e joga na tela um relatório detalhado com a causa da falha, a linha exata em que o erro aconteceu (PC) e o conteúdo de todos os registradores para que o programador saiba exatamente o que e onde corrigir o seu código em Assembly.
+Após isso, a função "dedo_duro" é utilizada para traduzir o Opcode numérico no comando que causou o problema (como "DIV" ou "PUSH") e exibe na tela um relatório detalhado com a causa da falha, a linha exata em que o erro aconteceu (PC) e o conteúdo de todos os registradores para que o programador saiba exatamente o que e onde corrigir o seu código em Assembly.
 
 ### O Breakpoint Manual (BREAKP):
 
