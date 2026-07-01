@@ -86,13 +86,13 @@ Inicialmente, ela isola os 6 bits superiores do IR usando a função "pega_pedac
 
 Usados para comandos mais complexos, que gastam mais ciclos de clock para manipular dados ou memória (como LOAD, STORE, CALL e RTS).
 
-## Componentes Lógicos Centrais:
+## Componentes Principais:
 
 ### A ULA (Unidade Lógica e Aritmética):
 
 Faz a parte matemática e lógica (soma, sub, and, or, cmp, etc.), ou seja, ela recebe os valores de entrada e devolve o resultado bruto junto com os bits empacotados que atualizam o registrador de flags (FR).
 
-### Muxes Virtuais:
+### Os Muxes Virtuais:
 
 Controlam os barramentos (M1 a M6) e, a depender da instrução do switch, os seletores ativam o dado que deve passar (um exemplo disso seria decidir se o endereço da memória vem do PC ou do SP).
 
@@ -100,13 +100,13 @@ Controlam os barramentos (M1 a M6) e, a depender da instrução do switch, os se
 
 Logo no início de cada ciclo do clock (loop:), o código executa uma rotina contínua de monitoramento do hardware virtual para capturar possíveis erros de software do programa rodando em Assembly:
 
-### Sensores de Falha Ativa:
+### Sensores de bug:
 
-Verifica se a ULA ativou a flag de divisão por zero.
+Checa se a ULA ativou a flag de divisão por zero.
 
 Verifica se o ponteiro de pilha SP estourou os limites inferiores (SP < 0, Stack Overflow) ou superiores da memória devido a desempilhamentos inválidos (Stack Underflow).
 
-Verifica se o endereço final de barramento M1 tenta ler ou escrever além do espaço físico da memória de 32KB (simulando um Segmentation Fault).
+Confere se o endereço final de barramento M1 tenta ler ou escrever além do espaço físico da memória de 32KB (simulando um Segmentation Fault).
 
 ### Interrupção por pane:
 
