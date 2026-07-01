@@ -59,6 +59,9 @@ link: https://github.com/GustavoSelhorstMarconi/Create-Screens-in-Assembly-with-
 ## Atenção!
 Para rodar o jogo, é necessario alterar o charmap do simulador, pelo charmap da PROJETO.zip. Sem isso, o jogo não ira rodar adequadamente.
 
+Vídeo explicando o jogo e o código em Assembly:
+https://drive.google.com/file/d/1UJBIVKOcwOwPeDDHGlRuqAM58onPs8Jl/view?usp=drive_link
+
 
 # Função Debug para o Simulador do ICMC
 
